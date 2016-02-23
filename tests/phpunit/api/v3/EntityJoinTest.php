@@ -25,12 +25,11 @@
  +--------------------------------------------------------------------+
  */
 
-require_once 'CiviTest/CiviUnitTestCase.php';
-
 /**
  * Test APIv3 ability to join across multiple entities
  *
  * @package CiviCRM_APIv3
+ * @group headless
  */
 class api_v3_EntityJoinTest extends CiviUnitTestCase {
 
