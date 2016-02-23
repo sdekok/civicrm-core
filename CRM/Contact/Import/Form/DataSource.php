@@ -180,6 +180,11 @@ class CRM_Contact_Import_Form_DataSource extends CRM_Core_Form {
         NULL, NULL, ts('Individual'), CRM_Import_Parser::CONTACT_INDIVIDUAL, $js
       );
     }
+    if (CRM_Contact_BAO_ContactType::isActive('Couple')) {
+      $contactOptions[] = $this->createElement('radio',
+        NULL, NULL, ts('Couple'), CRM_Import_Parser::CONTACT_COUPLE, $js
+      );
+    }
     if (CRM_Contact_BAO_ContactType::isActive('Household')) {
       $contactOptions[] = $this->createElement('radio',
         NULL, NULL, ts('Household'), CRM_Import_Parser::CONTACT_HOUSEHOLD, $js

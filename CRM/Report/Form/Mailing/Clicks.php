@@ -43,6 +43,7 @@ class CRM_Report_Form_Mailing_Clicks extends CRM_Report_Form {
   protected $_customGroupExtends = array(
     'Contact',
     'Individual',
+    'Couple',
     'Household',
     'Organization',
   );

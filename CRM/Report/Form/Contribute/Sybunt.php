@@ -41,6 +41,7 @@ class CRM_Report_Form_Contribute_Sybunt extends CRM_Report_Form {
   protected $_customGroupExtends = array(
     'Contact',
     'Individual',
+    'Couple',
     'Contribution',
   );
 

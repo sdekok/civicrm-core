@@ -229,6 +229,23 @@
     <fulltext/>
     <add>1.1</add>
   </field>
+   <field>
+    <name>spouse_nick_name</name>
+    <title>Spouse Nickname</title>
+    <type>varchar</type>
+    <length>128</length>
+    <html>
+      <type>Text</type>
+      <size>30</size>
+    </html>
+
+    <import>true</import>
+    <headerPattern>/n(ick\s)name|nick$/i</headerPattern>
+    <dataPattern>/^\w+$/</dataPattern>
+    <comment>Nickname.</comment>
+    <fulltext/>
+    <add>1.1</add>
+  </field>
   <field>
     <name>legal_name</name>
     <type>varchar</type>
@@ -393,6 +410,26 @@
     <add>1.8</add>
   </index>
   <field>
+    <name>spouse_first_name</name>
+    <type>varchar</type>
+    <length>64</length>
+    <html>
+      <type>Text</type>
+      <size>30</size>
+    </html>
+    <import>true</import>
+    <headerPattern>/^first|(f(irst\s)?name)$/i</headerPattern>
+    <dataPattern>/^\w+$/</dataPattern>
+    <fulltext/>
+    <comment>Spouse First Name.</comment>
+    <add>1.1</add>
+  </field>
+  <index>
+    <name>index_spouse_first_name</name>
+    <fieldName>spouse_first_name</fieldName>
+    <add>1.8</add>
+  </index>
+  <field>
     <name>middle_name</name>
     <type>varchar</type>
     <length>64</length>
@@ -405,6 +442,21 @@
     <dataPattern>/^\w+$/</dataPattern>
     <fulltext/>
     <comment>Middle Name.</comment>
+    <add>1.1</add>
+  </field>
+  <field>
+    <name>spouse_middle_name</name>
+    <type>varchar</type>
+    <length>64</length>
+    <html>
+      <type>Text</type>
+      <size>30</size>
+    </html>
+    <import>true</import>
+    <headerPattern>/^middle|(m(iddle\s)?name)$/i</headerPattern>
+    <dataPattern>/^\w+$/</dataPattern>
+    <fulltext/>
+    <comment>Spouse Middle Name.</comment>
     <add>1.1</add>
   </field>
   <field>
@@ -425,6 +477,29 @@
   <index>
     <name>index_last_name</name>
     <fieldName>last_name</fieldName>
+    <add>1.8</add>
+    <html>
+      <type>Text</type>
+    </html>
+  </index>
+  <field>
+    <name>spouse_last_name</name>
+    <type>varchar</type>
+    <length>64</length>
+    <html>
+      <type>Text</type>
+      <size>30</size>
+    </html>
+    <import>true</import>
+    <headerPattern>/^last|(l(ast\s)?name)$/i</headerPattern>
+    <dataPattern>/^\w+(\s\w+)?+$/</dataPattern>
+    <comment>Spouse Last Name.</comment>
+    <fulltext/>
+    <add>1.1</add>
+  </field>
+  <index>
+    <name>index_spouse_last_name</name>
+    <fieldName>spouse_last_name</fieldName>
     <add>1.8</add>
     <html>
       <type>Text</type>
@@ -452,8 +527,45 @@
     <add>1.6</add>
   </index>
   <field>
+    <name>spouse_prefix_id</name>
+    <title>Spouse Prefix</title>
+    <type>int unsigned</type>
+    <comment>Prefix or Title for name (Ms, Mr...). FK to prefix ID</comment>
+    <pseudoconstant>
+      <optionGroupName>individual_prefix</optionGroupName>
+    </pseudoconstant>
+    <html>
+      <type>Select</type>
+    </html>
+    <headerPattern>/^(prefix|title)/i</headerPattern>
+    <dataPattern>/^(mr|ms|mrs|sir|dr)\.?$/i</dataPattern>
+    <import>true</import>
+    <add>1.2</add>
+  </field>
+  <index>
+    <name>UI_spouse_prefix</name>
+    <fieldName>spouse_prefix_id</fieldName>
+    <add>1.6</add>
+  </index>
+  <field>
     <name>suffix_id</name>
     <title>Individual Suffix</title>
+    <type>int unsigned</type>
+    <pseudoconstant>
+      <optionGroupName>individual_suffix</optionGroupName>
+    </pseudoconstant>
+    <html>
+      <type>Select</type>
+    </html>
+    <import>true</import>
+    <comment>Suffix for name (Jr, Sr...). FK to suffix ID</comment>
+    <headerPattern>/^suffix$/i</headerPattern>
+    <dataPattern>/^(sr|jr)\.?|i{2,}$/</dataPattern>
+    <add>1.2</add>
+  </field>
+  <field>
+    <name>spouse_suffix_id</name>
+    <title>Spouse Suffix</title>
     <type>int unsigned</type>
     <pseudoconstant>
       <optionGroupName>individual_suffix</optionGroupName>
@@ -472,6 +584,11 @@
     <fieldName>suffix_id</fieldName>
     <add>1.6</add>
   </index>
+  <index>
+    <name>UI_spouse_suffix</name>
+    <fieldName>spouse_suffix_id</fieldName>
+    <add>1.6</add>
+  </index>
   <field>
     <name>formal_title</name>
     <type>varchar</type>
@@ -482,6 +599,18 @@
     </html>
     <headerPattern>/^title/i</headerPattern>
     <comment>Formal (academic or similar) title in front of name. (Prof., Dr. etc.)</comment>
+    <add>4.5</add>
+  </field>
+  <field>
+    <name>spouse_formal_title</name>
+    <type>varchar</type>
+    <length>64</length>
+    <import>true</import>
+    <html>
+      <type>Text</type>
+    </html>
+    <headerPattern>/^title/i</headerPattern>
+    <comment>Formal (academic or similar) title in front of spouse's name. (Prof., Dr. etc.)</comment>
     <add>4.5</add>
   </field>
   <field>
@@ -660,12 +789,47 @@
     </html>
   </index>
   <field>
+    <name>spouse_gender_id</name>
+    <title>Spouse Gender</title>
+    <type>int unsigned</type>
+    <pseudoconstant>
+      <optionGroupName>gender</optionGroupName>
+    </pseudoconstant>
+    <html>
+      <type>Select</type>
+    </html>
+    <headerPattern>/^gender$/i</headerPattern>
+    <comment>FK to gender ID</comment>
+    <import>true</import>
+    <add>1.2</add>
+  </field>
+  <index>
+    <name>UI_spouse_gender</name>
+    <fieldName>spouse_gender_id</fieldName>
+    <add>1.6</add>
+    <html>
+      <type>Select</type>
+    </html>
+  </index>
+  <field>
     <name>birth_date</name>
     <type>date</type>
     <import>true</import>
     <headerPattern>/^birth|(b(irth\s)?date)|D(\W*)O(\W*)B(\W*)$/i</headerPattern>
     <dataPattern>/\d{4}-?\d{2}-?\d{2}/</dataPattern>
     <comment>Date of birth</comment>
+    <add>1.1</add>
+    <html>
+      <type>Select Date</type>
+    </html>
+  </field>
+  <field>
+    <name>spouse_birth_date</name>
+    <type>date</type>
+    <import>true</import>
+    <headerPattern>/^birth|(b(irth\s)?date)|D(\W*)O(\W*)B(\W*)$/i</headerPattern>
+    <dataPattern>/\d{4}-?\d{2}-?\d{2}/</dataPattern>
+    <comment>Spouse Date of birth</comment>
     <add>1.1</add>
     <html>
       <type>Select Date</type>

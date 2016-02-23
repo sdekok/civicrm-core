@@ -177,7 +177,7 @@ WHERE  $where
   public function where($includeContactIDs = FALSE) {
     $clauses = array();
 
-    $clauses[] = "contact_a.contact_type = 'Individual'";
+    $clauses[] = "contact_a.contact_type = 'Individual' OR contact_a.contact_type = 'Couple'";
     $clauses[] = "civicrm_contribution.contact_id = contact_a.id";
 
     $startDate = CRM_Utils_Date::processDate($this->_formValues['start_date']);

@@ -306,6 +306,9 @@ class CRM_Contact_Form_Task_LabelCommon {
       elseif ($row['contact_type'] == 'Individual') {
         $individuals[$contact_id] = $row;
       }
+      elseif ($row['contact_type'] == 'Couple'){
+        $individuals[$contact_id] = $row;
+      }
     }
 
     // exclude individuals belonging to selected households

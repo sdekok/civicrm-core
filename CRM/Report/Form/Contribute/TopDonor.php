@@ -38,6 +38,7 @@ class CRM_Report_Form_Contribute_TopDonor extends CRM_Report_Form {
   protected $_customGroupExtends = array(
     'Contact',
     'Individual',
+    'Couple',
     'Contribution',
   );
 

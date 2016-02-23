@@ -172,6 +172,12 @@ class CRM_Contact_BAO_Contact extends CRM_Contact_DAO_Contact {
       // Format individual fields.
       CRM_Contact_BAO_Individual::format($params, $contact);
     }
+    elseif ($contact->contact_type == 'Couple'){
+      $allNull = FALSE;
+      
+      //Format couple fields
+      CRM_Contact_BAO_Couple::format($params, $contact);
+    }
     elseif ($contact->contact_type == 'Household') {
       if (isset($params['household_name'])) {
         $allNull = FALSE;
@@ -218,7 +224,7 @@ class CRM_Contact_BAO_Contact extends CRM_Contact_DAO_Contact {
       );
     }
 
-    if ($contact->contact_type == 'Individual' && (isset($params['current_employer']) || isset($params['employer_id']))) {
+    if (($contact->contact_type == 'Individual' || $contact->contact_type == 'Couple') && (isset($params['current_employer']) || isset($params['employer_id']))) {
       // Create current employer.
       $newEmployer = !empty($params['employer_id']) ? $params['employer_id'] : CRM_Utils_Array::value('current_employer', $params);
 
@@ -596,6 +602,9 @@ WHERE     civicrm_contact.id = " . CRM_Utils_Type::escape($id, 'Integer');
     CRM_Utils_Array::lookupValue($defaults, 'prefix', CRM_Core_PseudoConstant::get('CRM_Contact_DAO_Contact', 'prefix_id'), $reverse);
     CRM_Utils_Array::lookupValue($defaults, 'suffix', CRM_Core_PseudoConstant::get('CRM_Contact_DAO_Contact', 'suffix_id'), $reverse);
     CRM_Utils_Array::lookupValue($defaults, 'gender', CRM_Core_PseudoConstant::get('CRM_Contact_DAO_Contact', 'gender_id'), $reverse);
+    CRM_Utils_Array::lookupValue($defaults, 'spouse_prefix', CRM_Core_PseudoConstant::get('CRM_Contact_DAO_Contact', 'spouse_prefix_id'), $reverse);
+    CRM_Utils_Array::lookupValue($defaults, 'spouse_suffix', CRM_Core_PseudoConstant::get('CRM_Contact_DAO_Contact', 'spouse_suffix_id'), $reverse);
+    CRM_Utils_Array::lookupValue($defaults, 'spouse_gender', CRM_Core_PseudoConstant::get('CRM_Contact_DAO_Contact', 'spouse_gender_id'), $reverse);
     CRM_Utils_Array::lookupValue($defaults, 'communication_style', CRM_Core_PseudoConstant::get('CRM_Contact_DAO_Contact', 'communication_style_id'), $reverse);
 
     //lookup value of email/postal greeting, addressee, CRM-4575
@@ -1215,6 +1224,7 @@ WHERE id={$id}; ";
       // get the fields thar are meant for contact types
       if (in_array($contactType, array(
         'Individual',
+        'Couple',
         'Household',
         'Organization',
         'All',
@@ -1269,6 +1279,20 @@ WHERE id={$id}; ";
             'legal_name',
             'sic_code',
             'organization_name',
+            'spouse_first_name',
+            'spouse_middle_name',
+            'spouse_last_name',
+            'spouse_gender_id',
+            'spouse_prefix_id',
+            'spouse_suffix_id',
+            'spouse_birth_date',
+            'spouse_formal_title',
+          ),
+          'Couple' => array(
+            'household_name',
+            'legal_name',
+            'sic_code',
+            'organization_name',
           ),
           'Household' => array(
             'first_name',
@@ -1280,6 +1304,14 @@ WHERE id={$id}; ";
             'prefix_id',
             'suffix_id',
             'birth_date',
+            'spouse_first_name',
+            'spouse_middle_name',
+            'spouse_last_name',
+            'spouse_gender_id',
+            'spouse_prefix_id',
+            'spouse_suffix_id',
+            'spouse_birth_date',
+            'spouse_formal_title',
             'organization_name',
             'legal_name',
             'legal_identifier',
@@ -1298,6 +1330,14 @@ WHERE id={$id}; ";
             'prefix_id',
             'suffix_id',
             'birth_date',
+            'spouse_first_name',
+            'spouse_middle_name',
+            'spouse_last_name',
+            'spouse_gender_id',
+            'spouse_prefix_id',
+            'spouse_suffix_id',
+            'spouse_birth_date',
+            'spouse_formal_title',
             'household_name',
             'is_deceased',
             'deceased_date',
@@ -1308,7 +1348,7 @@ WHERE id={$id}; ";
         }
       }
       else {
-        foreach (array('Individual', 'Household', 'Organization') as $type) {
+        foreach (array('Individual', 'Couple', 'Household', 'Organization') as $type) {
           $fields = array_merge($fields,
             CRM_Core_BAO_CustomField::getFieldsForImport($type,
               $showAll,
@@ -1411,6 +1451,7 @@ WHERE id={$id}; ";
         // The fields are meant for contact types.
         if (in_array($contactType, array(
           'Individual',
+          'Couple',
           'Household',
           'Organization',
           'All',
@@ -1482,6 +1523,7 @@ WHERE id={$id}; ";
         else {
           foreach (array(
                      'Individual',
+                     'Couple',
                      'Household',
                      'Organization',
                    ) as $type) {
@@ -1542,6 +1584,24 @@ WHERE id={$id}; ";
               'email_greeting_custom',
               'postal_greeting_custom',
               'addressee_custom',
+              'spouse_first_name',
+              'spouse_middle_name',
+              'spouse_last_name',
+              'spouse_gender_id',
+              'spouse_prefix_id',
+              'spouse_suffix_id',
+              'spouse_birth_date',
+              'spouse_formal_title',
+              
+            ),
+            'Couple' => array(
+              'household_name',
+              'legal_name',
+              'sic_code',
+              'organization_name',
+              'email_greeting_custom',
+              'postal_greeting_custom',
+              'addressee_custom',
             ),
             'Household' => array(
               'first_name',
@@ -1553,6 +1613,14 @@ WHERE id={$id}; ";
               'prefix_id',
               'suffix_id',
               'birth_date',
+              'spouse_first_name',
+              'spouse_middle_name',
+              'spouse_last_name',
+              'spouse_gender_id',
+              'spouse_prefix_id',
+              'spouse_suffix_id',
+              'spouse_birth_date',
+              'spouse_formal_title',
               'organization_name',
               'legal_name',
               'legal_identifier',
@@ -1577,6 +1645,14 @@ WHERE id={$id}; ";
               'prefix_id',
               'suffix_id',
               'birth_date',
+              'spouse_first_name',
+              'spouse_middle_name',
+              'spouse_last_name',
+              'spouse_gender_id',
+              'spouse_prefix_id',
+              'spouse_suffix_id',
+              'spouse_birth_date',
+              'spouse_formal_title',
               'household_name',
               'email_greeting_custom',
               'postal_greeting_custom',
@@ -1792,7 +1868,8 @@ WHERE  civicrm_contact.id = %1 ";
     // check if the contact type
     $contactType = self::getContactType($id);
 
-    $nameFields = ($contactType == 'Individual') ? "civicrm_contact.first_name, civicrm_contact.last_name, civicrm_contact.display_name" : "civicrm_contact.display_name";
+    // TODO: Update with full variety of name fields
+    $nameFields = ($contactType == 'Individual') ? "civicrm_contact.first_name, civicrm_contact.last_name, civicrm_contact.display_name" : ($contactType == 'Couple') ? "civicrm_contact.first_name, civicrm_contact.last_name, civicrm_contact.spouse_first_name, civicrm_contact.spouse_last_name, civicrm_contact.display_name" :"civicrm_contact.display_name";
 
     $sql = "
 SELECT $nameFields, civicrm_email.email, civicrm_contact.do_not_email, civicrm_email.on_hold, civicrm_contact.is_deceased
@@ -1808,6 +1885,39 @@ ORDER BY civicrm_email.is_primary DESC";
           $name = "{$dao->first_name} {$dao->last_name}";
         }
         else {
+          $name = $dao->display_name;
+        }
+      }
+      else if ($contactType == 'Couple') {
+        if ($dao->first_name || $dao->last_name)
+        {
+            if($dao->last_name && $dao->spouse_last_name)
+            {
+                if(strcmp($dao->last_name,$dao->spouse_last_name) == 0)
+                {
+                    if($dao->spouse_first_name)
+                    {
+                        $name = "{$dao->first_name} and {$dao->spouse_first_name} {$dao->last_name}";
+                    }
+                    else{
+                        $name = "{$dao->first_name} {$dao->last_name}";
+                    }
+                }
+                else{
+                    $name = "{$dao->first_name} {$dao->last_name} and {$dao->spouse_first_name} {$dao->spouse_last_name}";
+                }
+            }
+            else if($dao->spouse_first_name)
+            {
+                $name = "{$dao->first_name} and {$dao->spouse_first_name} {$dao->last_name}";
+            }
+            else
+            {
+                $name = "{$dao->first_name} {$dao->last_name}";
+            }
+        }
+        else
+	{
           $name = $dao->display_name;
         }
       }
@@ -2281,13 +2391,19 @@ ORDER BY civicrm_email.is_primary DESC";
           elseif (in_array($key,
               array(
                 'nick_name',
+                'spouse_nick_name',
                 'job_title',
                 'middle_name',
+                'spouse_middle_name',
                 'birth_date',
+                'spouse_birth_date',
                 'gender_id',
+                'spouse_gender_id',
                 'current_employer',
                 'prefix_id',
+                'spouse_prefix_id',
                 'suffix_id',
+                'spouse_suffix_id',
               )) &&
             ($value == '' || !isset($value)) &&
             ($session->get('authSrc') & (CRM_Core_Permission::AUTH_SRC_CHECKSUM + CRM_Core_Permission::AUTH_SRC_LOGIN)) == 0 ||

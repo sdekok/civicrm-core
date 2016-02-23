@@ -74,6 +74,9 @@ class CRM_Dedupe_BAO_RuleGroup extends CRM_Dedupe_DAO_RuleGroup {
         'gender.label' => 'civicrm_contact.gender_id',
         'individual_prefix.label' => 'civicrm_contact.prefix_id',
         'individual_suffix.label' => 'civicrm_contact.suffix_id',
+        'spouse_gender.label' => 'civicrm_contact.spouse_gender_id',
+        'spouse_prefix.label' => 'civicrm_contact.spouse_prefix_id',
+        'spouse_suffix.label' => 'civicrm_contact.spouse_suffix_id',
         'addressee.label' => 'civicrm_contact.addressee_id',
         'email_greeting.label' => 'civicrm_contact.email_greeting_id',
         'postal_greeting.label' => 'civicrm_contact.postal_greeting_id',
@@ -90,7 +93,7 @@ class CRM_Dedupe_BAO_RuleGroup extends CRM_Dedupe_DAO_RuleGroup {
         'civicrm_phone',
       );
 
-      foreach (array('Individual', 'Organization', 'Household') as $ctype) {
+      foreach (array('Individual', 'Couple', 'Organization', 'Household') as $ctype) {
         // take the table.field pairs and their titles from importableFields() if the table is supported
         foreach (CRM_Contact_BAO_Contact::importableFields($ctype) as $iField) {
           if (isset($iField['where'])) {
@@ -444,7 +447,7 @@ class CRM_Dedupe_BAO_RuleGroup extends CRM_Dedupe_DAO_RuleGroup {
    * not specified, do it for all
    *
    * @param string $contactType
-   *   Individual, Household or Organization.
+   *   Individual, Couple, Household or Organization.
    *
    *
    * @return array

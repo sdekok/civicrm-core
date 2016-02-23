@@ -108,7 +108,11 @@ class CRM_Contact_Import_Form_MapField extends CRM_Import_Form_MapField {
         $highlightedFields[] = 'first_name';
         $highlightedFields[] = 'last_name';
         break;
-
+      case CRM_Import_Parser::CONTACT_COUPLE: 
+        $contactType = 'Couple';
+        $highlightedFields[] = 'first_name';
+        $highlightedFields[] = 'last_name';
+        break;
       case CRM_Import_Parser::CONTACT_HOUSEHOLD:
         $contactType = 'Household';
         $highlightedFields[] = 'household_name';
@@ -131,6 +135,7 @@ class CRM_Contact_Import_Form_MapField extends CRM_Import_Form_MapField {
       //Mark Dedupe Rule Fields as required, since it's used in matching contact
       foreach (array(
                  'Individual',
+                 'Couple',
                  'Household',
                  'Organization',
                ) as $cType) {
@@ -296,6 +301,7 @@ class CRM_Contact_Import_Form_MapField extends CRM_Import_Form_MapField {
     $highlightedFields['external_identifier'] = 'All';
     $highlightedFields['first_name'] = 'Individual';
     $highlightedFields['last_name'] = 'Individual';
+    $highlightedFields['spouse_first_name'] = 'Couple';
     $highlightedFields['household_name'] = 'Household';
     $highlightedFields['organization_name'] = 'Organization';
 
@@ -415,6 +421,10 @@ class CRM_Contact_Import_Form_MapField extends CRM_Import_Form_MapField {
               switch ($this->get('contactType')) {
                 case CRM_Import_Parser::CONTACT_INDIVIDUAL:
                   $contactType = 'Individual';
+                  break;
+                  
+                case CRM_Import_Parser::CONTACT_COUPLE:
+                  $contactType = 'Couple';
                   break;
 
                 case CRM_Import_Parser::CONTACT_HOUSEHOLD:
@@ -885,6 +895,10 @@ class CRM_Contact_Import_Form_MapField extends CRM_Import_Form_MapField {
       switch ($contactType) {
         case CRM_Import_Parser::CONTACT_INDIVIDUAL:
           $cType = 'Individual';
+          break;
+        
+        case CRM_Import_parser::CONTACT_COUPLE: 
+          $cType = 'Couple';
           break;
 
         case CRM_Import_Parser::CONTACT_HOUSEHOLD:

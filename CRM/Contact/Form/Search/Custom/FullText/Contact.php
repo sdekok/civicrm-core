@@ -129,7 +129,7 @@ GROUP BY   et.entity_id
 
     // get the custom data info
     $this->fillCustomInfo($tables,
-      "( 'Contact', 'Individual', 'Organization', 'Household' )"
+      "( 'Contact', 'Individual', 'Couple', 'Organization', 'Household' )"
     );
 
     return $tables;

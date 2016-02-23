@@ -36,7 +36,7 @@ class CRM_Report_Form_Pledge_Summary extends CRM_Report_Form {
 
   protected $_summary = NULL;
   protected $_totalPaid = FALSE;
-  protected $_customGroupExtends = array('Pledge', 'Individual');
+  protected $_customGroupExtends = array('Pledge', 'Individual', 'Couple');
   protected $_customGroupGroupBy = TRUE;
   protected $_addressField = FALSE;
   protected $_emailField = FALSE;

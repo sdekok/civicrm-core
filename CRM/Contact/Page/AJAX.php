@@ -529,6 +529,10 @@ LIMIT {$offset}, {$rowCount}
       case 1:
         $contactType = 'Individual';
         break;
+      
+      case 5: 
+        $contactType = 'Couple';
+        break;
 
       case 2:
         $contactType = 'Household';
@@ -551,7 +555,11 @@ LIMIT {$offset}, {$rowCount}
       case 1:
         $contactType = 'Individual';
         break;
-
+      
+      case 5:
+        $contactType = 'Couple';
+        break;
+    
       case 2:
         $contactType = 'Household';
         break;

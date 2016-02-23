@@ -499,6 +499,23 @@ WHERE id={$contactId}; ";
       case 'Household':
         $form->add('text', 'household_name', ts('Household Name'), $attributes['household_name']);
         break;
+      
+      case 'Couple':
+        $form->addElement('select', 'spouse_prefix_id', ts('Spouse Prefix'),
+          array('' => ts('- prefix -')) + CRM_Core_PseudoConstant::get('CRM_Contact_DAO_Contact', 'spouse_prefix_id')
+        );
+        $form->addElement('text', 'spouse_first_name', ts('Spouse First Name'),
+          $attributes['spouse_first_name']
+        );
+        $form->addElement('text', 'spouse_middle_name', ts('Spouse Middle Name'),
+          $attributes['spouse_middle_name']
+        );
+        $form->addElement('text', 'spouse_last_name', ts('Spouse Last Name'),
+          $attributes['spouse_last_name']
+        );
+        $form->addElement('select', 'spouse_suffix_id', ts('Spouse Suffix'),
+          array('' => ts('- suffix -')) + CRM_Core_PseudoConstant::get('CRM_Contact_DAO_Contact', 'spouse_suffix_id')
+        );
 
       default:
         // individual
@@ -1078,8 +1095,9 @@ WHERE id IN (" . implode(',', $contactIds) . ")";
   public static function defaultGreeting($contactType, $greetingType) {
     $contactTypeFilters = array(
       'Individual' => 1,
-      'Household' => 2,
-      'Organization' => 3,
+      'Couple' => 2, 
+      'Household' => 3,
+      'Organization' => 4,
     );
     if (!isset($contactTypeFilters[$contactType])) {
       return NULL;

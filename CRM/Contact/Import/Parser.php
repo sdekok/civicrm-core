@@ -123,6 +123,10 @@ abstract class CRM_Contact_Import_Parser extends CRM_Import_Parser {
       case CRM_Import_Parser::CONTACT_INDIVIDUAL:
         $this->_contactType = 'Individual';
         break;
+      
+      case CRM_Import_Parser::CONTACT_COUPLE: 
+        $this->_contactType = 'Couple';
+        break;
 
       case CRM_Import_Parser::CONTACT_HOUSEHOLD:
         $this->_contactType = 'Household';
@@ -678,6 +682,10 @@ abstract class CRM_Contact_Import_Parser extends CRM_Import_Parser {
     switch ($this->_contactType) {
       case 'Individual':
         $store->set('contactType', CRM_Import_Parser::CONTACT_INDIVIDUAL);
+        break;
+
+      case 'Couple': 
+        $store->set('contactType', CRM_Import_Parser::CONTACT_COUPLE);
         break;
 
       case 'Household':

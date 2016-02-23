@@ -46,6 +46,7 @@ class CRM_Report_Form_Event_ParticipantListing extends CRM_Report_Form_Event {
     'Participant',
     'Contact',
     'Individual',
+    'Couple',
     'Event',
   );
 

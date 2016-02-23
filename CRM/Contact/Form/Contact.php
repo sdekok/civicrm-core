@@ -162,7 +162,7 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
         $this, TRUE, NULL, 'REQUEST'
       );
       if (!in_array($this->_contactType,
-        array('Individual', 'Household', 'Organization')
+        array('Individual', 'Couple', 'Household', 'Organization')
       )
       ) {
         CRM_Core_Error::statusBounce(ts('Could not get a contact id and/or contact type'));
@@ -297,7 +297,7 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
     }
 
     // build demographics only for Individual contact type
-    if ($this->_contactType != 'Individual' &&
+    if ($this->_contactType != 'Individual' && $this->_contactType != 'Couple' &&
       array_key_exists('Demographics', $this->_editOptions)
     ) {
       unset($this->_editOptions['Demographics']);
@@ -510,13 +510,11 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
 
       for ($instance = 1; $instance <= $this->get($blockName . '_Block_Count'); $instance++) {
         // make we require one primary block, CRM-5505
-        if ($updateMode) {
-          if (!$hasPrimary) {
-            $hasPrimary = CRM_Utils_Array::value(
-              'is_primary',
-              CRM_Utils_Array::value($instance, $defaults[$name])
-            );
-          }
+        if ($updateMode && !$hasPrimary) {
+          $hasPrimary = CRM_Utils_Array::value(
+            'is_primary',
+            CRM_Utils_Array::value($instance, $defaults[$name])
+          );
           continue;
         }
 
@@ -902,7 +900,7 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
     }
 
     //make deceased date null when is_deceased = false
-    if ($this->_contactType == 'Individual' && !empty($this->_editOptions['Demographics']) && empty($params['is_deceased'])) {
+    if (($this->_contactType == 'Individual' || $this->_contactType == 'Couple') && !empty($this->_editOptions['Demographics']) && empty($params['is_deceased'])) {
       $params['is_deceased'] = FALSE;
       $params['deceased_date'] = NULL;
     }
@@ -1406,7 +1404,7 @@ class CRM_Contact_Form_Contact extends CRM_Core_Form {
 
     // process to set membership status to deceased for both active/inactive membership
     if ($contactId &&
-      $this->_contactType == 'Individual' && !empty($deceasedParams['is_deceased'])
+      ($this->_contactType == 'Individual' || $this->_contactType == 'Couple') && !empty($deceasedParams['is_deceased'])
     ) {
 
       $session = CRM_Core_Session::singleton();

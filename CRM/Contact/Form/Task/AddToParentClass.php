@@ -147,7 +147,7 @@ class CRM_Contact_Form_Task_AddToParentClass extends CRM_Contact_Form_Task {
 
         $form->set('contact_type', $type);
         $form->set('contact_sub_type', $subType);
-        if ($type == 'Individual' || $type == 'Organization' || $type == 'Household') {
+        if ($type == 'Individual' || $type=='Couple' || $type == 'Organization' || $type == 'Household') {
           $searchValues[] = array('contact_type', '=', $type, 0, 0);
           $contactTypeAdded = TRUE;
         }

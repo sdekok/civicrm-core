@@ -873,7 +873,7 @@ class CRM_Contact_BAO_Query {
           $this->_tables['civicrm_note'] = 1;
         }
         elseif ($name === 'current_employer') {
-          $this->_select[$name] = "IF ( contact_a.contact_type = 'Individual', contact_a.organization_name, NULL ) as current_employer";
+          $this->_select[$name] = "IF ( contact_a.contact_type = 'Individual' OR contact_a.contact_type = 'Couple', contact_a.organization_name, NULL ) as current_employer";
           $this->_element[$name] = 1;
         }
       }
@@ -2158,7 +2158,7 @@ class CRM_Contact_BAO_Query {
       $ceWhereClause = self::buildClause($wc, $op,
         $value
       );
-      $ceWhereClause .= " AND contact_a.contact_type = 'Individual'";
+      $ceWhereClause .= " AND (contact_a.contact_type = 'Individual' OR contact_a.contact_type = 'Couple')";
       $this->_where[$grouping][] = $ceWhereClause;
       $this->_qill[$grouping][] = "$field[title] $op \"$value\"";
     }
@@ -4149,9 +4149,18 @@ civicrm_relationship.is_permission_a_b = 0
           'prefix_id' => 1,
           'suffix_id' => 1,
           'formal_title' => 1,
+          'spouse_nick_name' => 1,
+          'spouse_first_name' => 1,
+          'spouse_middle_name' => 1,
+          'spouse_last_name' => 1,
+          'spouse_prefix_id' => 1,
+          'spouse_suffix_id' => 1,
+          'spouse_formal_title' => 1,
           'communication_style_id' => 1,
           'birth_date' => 1,
+          'spouse_birth_date' => 1,
           'gender_id' => 1,
+          'spouse_gender_id' => 1,
           'street_address' => 1,
           'supplemental_address_1' => 1,
           'supplemental_address_2' => 1,
@@ -4939,12 +4948,21 @@ SELECT COUNT( conts.total_amount ) as cancel_count,
         'prefix_id' => 1,
         'suffix_id' => 1,
         'formal_title' => 1,
+        'spouse_nick_name' => 1,
+        'spouse_first_name' => 1,
+        'spouse_middle_name' => 1,
+        'spouse_last_name' => 1,
+        'spouse_prefix_id' => 1,
+        'spouse_suffix_id' => 1,
+        'spouse_formal_title' => 1,
         'communication_style_id' => 1,
         'email_greeting' => 1,
         'postal_greeting' => 1,
         'addressee' => 1,
         'birth_date' => 1,
+	'spouse_birth_date' => 1,
         'gender_id' => 1,
+	'spouse_gender_id' => 1,
         'preferred_communication_method' => 1,
         'do_not_phone' => 1,
         'do_not_email' => 1,

@@ -43,6 +43,7 @@ class CRM_Report_Form_Contribute_History extends CRM_Report_Form {
   protected $_customGroupExtends = array(
     'Contact',
     'Individual',
+    'Couple',
     'Contribution',
   );
 
@@ -101,6 +102,15 @@ class CRM_Report_Form_Contribute_History extends CRM_Report_Form {
           'last_name' => array(
             'title' => ts('Last Name'),
           ),
+          'spouse_first_name' => array(
+            'title' => ts('Spouse First Name'),
+          ),
+          'spouse_middle_name' => array(
+            'title' => ts('Spouse Middle Name'),
+          ),
+          'spouse_last_name' => array(
+            'title' => ts('Spouse_Last Name'),
+          ),
           'id' => array(
             'no_display' => TRUE,
             'default' => TRUE,
@@ -111,6 +121,12 @@ class CRM_Report_Form_Contribute_History extends CRM_Report_Form {
           ),
           'birth_date' => array(
             'title' => ts('Birth Date'),
+          ),
+          'spouse_gender_id' => array(
+            'title' => ts('Spouse Gender'),
+          ),
+          'spouse_birth_date' => array(
+            'title' => ts('Spouse Birth Date'),
           ),
           'age' => array(
             'title' => ts('Age'),

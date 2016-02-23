@@ -280,7 +280,7 @@ class CRM_Dedupe_Merger {
       );
       $result = civicrm_api3('custom_group', 'get', array(
         'is_multiple' => 1,
-        'extends' => array('IN' => array('Individual', 'Organization', 'Household', 'Contact')),
+        'extends' => array('IN' => array('Individual', 'Couple', 'Organization', 'Household', 'Contact')),
         'return' => array('id', 'title', 'table_name', 'style'),
       ));
       foreach ($result['values'] as $custom) {
@@ -1066,6 +1066,20 @@ INNER JOIN  civicrm_membership membership2 ON membership1.membership_type_id = m
           $genderOptions = civicrm_api3('contact', 'getoptions', array('field' => 'gender_id'));
           $label = $genderOptions['values'][$value];
         }
+        elseif ($field == 'spouse_prefix' || $field == 'spouse_prefix_id') {
+          $label = CRM_Utils_Array::value('individual_prefix', $contact);
+          $value = CRM_Utils_Array::value('spouse_prefix_id', $contact);
+          $field = 'prefix_id';
+        }
+        elseif ($field == 'spouse_suffix' || $field == 'spouse_suffix_id') {
+          $label = CRM_Utils_Array::value('individual_suffix', $contact);
+          $value = CRM_Utils_Array::value('spouse_suffix_id', $contact);
+          $field = 'spouse_suffix_id';
+        }
+        elseif ($field == 'spouse_gender_id' && !empty($value)) {
+          $genderOptions = civicrm_api3('contact', 'getoptions', array('field' => 'spouse_gender_id'));
+          $label = $genderOptions['values'][$value];
+        }
         elseif ($field == 'current_employer_id' && !empty($value)) {
           $label = "$value (" . CRM_Contact_BAO_Contact::displayName($value) . ")";
         }
@@ -1600,6 +1614,9 @@ INNER JOIN  civicrm_membership membership2 ON membership1.membership_type_id = m
     $names['gender'] = array('newName' => 'gender_id', 'groupName' => 'gender');
     $names['individual_prefix'] = array('newName' => 'prefix_id', 'groupName' => 'individual_prefix');
     $names['individual_suffix'] = array('newName' => 'suffix_id', 'groupName' => 'individual_suffix');
+    $names['spouse_gender'] = array('newName' => 'spouse_gender_id', 'groupName' => 'gender');
+    $names['spouse_prefix'] = array('newName' => 'spouse_prefix_id', 'groupName' => 'individual_prefix');
+    $names['spouse_suffix'] = array('newName' => 'spouse_suffix_id', 'groupName' => 'individual_suffix');
     $names['communication_style'] = array('newName' => 'communication_style_id', 'groupName' => 'communication_style');
     $names['addressee'] = array('newName' => 'addressee_id', 'groupName' => 'addressee');
     $names['email_greeting'] = array('newName' => 'email_greeting_id', 'groupName' => 'email_greeting');

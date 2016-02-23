@@ -66,6 +66,79 @@
         {$form.suffix_id.html}
       </div>
     {/if}
+  {elseif $contactType eq 'Couple'}
+    {if $form.prefix_id}
+      <div class="crm-inline-edit-field">
+        {$form.prefix_id.label}<br/>
+        {$form.prefix_id.html}
+      </div>
+    {/if}
+    {if $form.formal_title}
+      <div class="crm-inline-edit-field">
+        {$form.formal_title.label}<br/>
+        {$form.formal_title.html}
+      </div>
+    {/if}
+    {if $form.first_name}
+      <div class="crm-inline-edit-field">
+        {$form.first_name.label}<br />
+        {$form.first_name.html}
+      </div>
+    {/if}
+    {if $form.middle_name}
+      <div class="crm-inline-edit-field">
+        {$form.middle_name.label}<br />
+        {$form.middle_name.html}
+      </div>
+    {/if}
+    {if $form.last_name}
+      <div class="crm-inline-edit-field">
+        {$form.last_name.label}<br />
+        {$form.last_name.html}
+      </div>
+    {/if}
+    {if $form.suffix_id}
+      <div class="crm-inline-edit-field">
+        {$form.suffix_id.label}<br/>
+        {$form.suffix_id.html}
+      </div>
+    {/if}
+    {if $form.spouse_prefix_id}
+      <div class="crm-inline-edit-field">
+        {$form.spouse_prefix_id.label}<br/>
+        {$form.spouse_prefix_id.html}
+      </div>
+    {/if}
+    {if $form.spouse_formal_title}
+      <div class="crm-inline-edit-field">
+        {$form.spouse_formal_title.label}<br/>
+        {$form.spouse_formal_title.html}
+      </div>
+    {/if}
+    {if $form.spouse_first_name}
+      <div class="crm-inline-edit-field">
+        {$form.spouse_first_name.label}<br />
+        {$form.spouse_first_name.html}
+      </div>
+    {/if}
+    {if $form.spouse_middle_name}
+      <div class="crm-inline-edit-field">
+        {$form.spouse_middle_name.label}<br />
+        {$form.spouse_middle_name.html}
+      </div>
+    {/if}
+    {if $form.spouse_last_name}
+      <div class="crm-inline-edit-field">
+        {$form.spouse_last_name.label}<br />
+        {$form.spouse_last_name.html}
+      </div>
+    {/if}
+    {if $form.spouse_suffix_id}
+      <div class="crm-inline-edit-field">
+        {$form.spouse_suffix_id.label}<br/>
+        {$form.spouse_suffix_id.html}
+      </div>
+    {/if}
   {elseif $contactType eq 'Organization'}
     <div class="crm-inline-edit-field">{$form.organization_name.label}&nbsp;
     {$form.organization_name.html}</div>

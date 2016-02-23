@@ -164,7 +164,7 @@ LEFT JOIN civicrm_state_province state_province ON  state_province.id = address.
     $clause[] = "contact_a.id = IF( EXISTS(select cr.id from civicrm_relationship cr where (cr.contact_id_a = cgc.contact_id AND (cr.relationship_type_id = 7 OR cr.relationship_type_id = 6))),
                                        (select cr.contact_id_b from civicrm_relationship cr where (cr.contact_id_a = cgc.contact_id AND (cr.relationship_type_id = 7 OR cr.relationship_type_id = 6))),
                                         cgc.contact_id )";
-    $clause[] = "contact_a.contact_type IN ('Individual','Household')";
+    $clause[] = "contact_a.contact_type IN ('Individual', 'Couple', 'Household')";
 
     if ($this->_aclWhere) {
       $clause[] = " {$this->_aclWhere} ";

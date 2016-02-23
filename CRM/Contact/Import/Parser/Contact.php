@@ -51,6 +51,8 @@ class CRM_Contact_Import_Parser_Contact extends CRM_Contact_Import_Parser {
   protected $_emailIndex;
   protected $_firstNameIndex;
   protected $_lastNameIndex;
+  protected $_spouseFirstNameIndex;
+  protected $_spouseLastNameIndex;
 
   protected $_householdNameIndex;
   protected $_organizationNameIndex;
@@ -214,6 +216,8 @@ class CRM_Contact_Import_Parser_Contact extends CRM_Contact_Import_Parser {
     $this->_emailIndex = -1;
     $this->_firstNameIndex = -1;
     $this->_lastNameIndex = -1;
+    $this->_spouseFirstNameIndex = -1;
+    $this->_spouseLastNameIndex = -1;
     $this->_householdNameIndex = -1;
     $this->_organizationNameIndex = -1;
     $this->_externalIdentifierIndex = -1;
@@ -232,6 +236,12 @@ class CRM_Contact_Import_Parser_Contact extends CRM_Contact_Import_Parser {
       }
       if ($key == 'last_name') {
         $this->_lastNameIndex = $index;
+      }
+      if ($key == 'spouse_first_name') {
+          $this->_spouseFirstNameIndex = $index;
+      }
+      if ($key == 'spouse_last_name') {
+          $this->_spouseLastNameIndex = $index;
       }
       if ($key == 'household_name') {
         $this->_householdNameIndex = $index;
@@ -316,6 +326,22 @@ class CRM_Contact_Import_Parser_Contact extends CRM_Contact_Import_Parser {
         }
         break;
 
+      case 'Couple':
+        $missingNames = array();
+        if ($this->_firstNameIndex < 0 || empty($values[$this->_firstNameIndex])) {
+          $errorRequired = TRUE;
+          $missingNames[] = ts('First Name');
+        }
+        if ($this->_lastNameIndex < 0 || empty($values[$this->_lastNameIndex])) {
+          $errorRequired = TRUE;
+          $missingNames[] = ts('Last Name');
+        }
+        if ($errorRequired) {
+          $and = ' ' . ts('and') . ' ';
+          $errorMessage = ts('Missing required fields:') . ' ' . implode($and, $missingNames);
+        }
+        break;
+        
       case 'Household':
         if ($this->_householdNameIndex < 0 || empty($values[$this->_householdNameIndex])) {
           $errorRequired = TRUE;
@@ -336,7 +362,7 @@ class CRM_Contact_Import_Parser_Contact extends CRM_Contact_Import_Parser {
     if ($this->_emailIndex >= 0) {
       /* If we don't have the required fields, bail */
 
-      if ($this->_contactType == 'Individual' && !$this->_updateWithId) {
+      if (($this->_contactType == 'Individual' || $this->_contactType == 'Couple') && !$this->_updateWithId) {
         if ($errorRequired && empty($values[$this->_emailIndex])) {
           if ($errorMessage) {
             $errorMessage .= ' ' . ts('OR') . ' ' . ts('Email Address');
@@ -661,7 +687,7 @@ class CRM_Contact_Import_Parser_Contact extends CRM_Contact_Import_Parser {
     if ($createNewContact || ($this->_retCode != CRM_Import_Parser::NO_MATCH && $this->_updateWithId)) {
 
       //CRM-4430, don't carry if not submitted.
-      foreach (array('prefix_id', 'suffix_id', 'gender_id') as $name) {
+      foreach (array('prefix_id', 'suffix_id', 'gender_id', 'spouse_prefix_id', 'spouse_suffix_id', 'spouse_gender_id') as $name) {
         if (!empty($formatted[$name])) {
           $options = CRM_Contact_BAO_Contact::buildOptions($name, 'get');
           if (!isset($options[$formatted[$name]])) {
@@ -1406,6 +1432,20 @@ class CRM_Contact_Import_Parser_Contact extends CRM_Contact_Import_Parser {
             }
             break;
 
+          case 'spouse_prefix':
+          case 'spouse_prefix_id':
+            if (!self::in_value($value, CRM_Core_PseudoConstant::get('CRM_Contact_DAO_Contact', 'spouse_prefix_id'))) {
+              self::addToErrorMsg(ts('Spouse Prefix'), $errorMessage);
+            }
+            break;
+
+          case 'spouse_suffix':
+          case 'spouse_id':
+            if (!self::in_value($value, CRM_Core_PseudoConstant::get('CRM_Contact_DAO_Contact', 'spouse_suffix_id'))) {
+              self::addToErrorMsg(ts('Spouse Suffix'), $errorMessage);
+            }
+            break;
+            
           case 'state_province':
             if (!empty($value)) {
               foreach ($value as $stateValue) {
